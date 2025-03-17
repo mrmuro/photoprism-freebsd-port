@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	photoprism
-DISTVERSION=	g20230513
+DISTVERSION=	g20250513
 CATEGORIES=	www
 
 MAINTAINER=	huoju@devep.net
