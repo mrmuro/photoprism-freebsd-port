@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	photoprism
-DISTVERSION=	g20230513
+DISTVERSION=	g20250228
 CATEGORIES=	www
 
 MAINTAINER=	huoju@devep.net
@@ -24,12 +24,12 @@ EXTRACT_DEPENDS=  ${RUN_DEPENDS} \
 
 BUILD_DEPENDS= ${EXTRACT_DEPENDS} 
 
-USES= gmake go:1.19,modules python:3.6+,build 
+USES= gmake go:1.22.7+,modules python:3.6+,build 
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	photoprism
 GH_PROJECT=	photoprism
-GH_TAGNAME=     0b780defbbf998a1f69a438c7a882bc0a5c8bf26
+GH_TAGNAME=     43447fa3810a1fb3aa3f1181a025e8d0c4cae392
 
 USE_RC_SUBR=    photoprism
 PHOTOPRISM_DATA_DIR=      /var/db/photoprism
@@ -67,7 +67,7 @@ do-build:
 	@( cd ${WRKSRC} ; \
 		${SETENV} ${MAKE_ENV} ${GO_ENV} ${GO_CMD} build -v -ldflags \
 	"-X main.version=${DISTVERSION:C/^...//}-${GH_TAGNAME:C/([0-9a-f]{7}).*/\1/}-${BUILD_OS}-${BUILD_ARCH}-DEBUG-build-${BUILD_DATE}" \
-	-o ${WRKSRC}/photoprism ./cmd/photoprism/photoprism.go ; \
+	-o ${WRKSRC}/photoprism ./plus/cmd/photoprism-plus/photoprism-plus.go ; \
 		)
 
 do-install:
