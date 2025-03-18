@@ -13,18 +13,23 @@ RUN_DEPENDS=  ffmpeg:multimedia/ffmpeg \
 	exiftool:graphics/p5-Image-ExifTool \
         libheif>=1.14.2:graphics/libheif
 
-LIB_DEPENDS=	libtensorflow.so.1:science/libtensorflow1
+LIB_DEPENDS=	libtensorflow.so.1:science/libtensorflow1 \
+	libvips.so:graphics/vips
 
 EXTRACT_DEPENDS=  ${RUN_DEPENDS} \
 	bash:shells/bash \
 	git:devel/git \
 	gmake:devel/gmake \
 	npm:www/npm-node18 \
-	wget:ftp/wget:1.21+
+	wget:ftp/wget:1.21+ \
+	pkgconf:devel/pkgconf
 
 BUILD_DEPENDS= ${EXTRACT_DEPENDS} 
 
-USES= gmake go:1.22.7+,modules python:3.6+,build 
+USES=gmake go:1.22,modules python:3.6+,build
+
+PYTHON_SUFFIX=	${PYTHON_VER}
+PLIST_SUB+=	PYTHON_SUFFIX=${PYTHON_SUFFIX}
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	photoprism
@@ -41,6 +46,7 @@ BUILD_DATE!=date -u +%y%m%d
 BUILD_ARCH!=uname -m
 
 post-extract:
+	@${LN} -sf /usr/src/plus ${WRKSRC}/plus
 	@${REINPLACE_CMD} -e 's|sha1sum|shasum|g' ${WRKSRC}/scripts/download-facenet.sh
 	@${REINPLACE_CMD} -e 's|sha1sum|shasum|g' ${WRKSRC}/scripts/download-nasnet.sh
 	@${REINPLACE_CMD} -e 's|sha1sum|shasum|g' ${WRKSRC}/scripts/download-nsfw.sh
@@ -65,7 +71,7 @@ do-build:
 		env NODE_ENV=production npm run build ; \
 		)
 	@( cd ${WRKSRC} ; \
-		${SETENV} ${MAKE_ENV} ${GO_ENV} ${GO_CMD} build -v -ldflags \
+		${SETENV} ${MAKE_ENV} ${GO_ENV}CGO_ENABLED=1 CGO_CFLAGS=-I/usr/local/include CGO_LDFLAGS=-L/usr/local/lib GOAMD64= GOARM= GOPATH=/usr/ports/distfiles/go/www_photoprism-freebsd-port GOBIN=/usr/src/photoprism-freebsd-port/work/bin GO111MODULE=on GOFLAGS=-modcacherw GOSUMDB=sum.golang.org GO_NO_VENDOR_CHECKS=1 ${GO_CMD} build -v -ldflags \
 	"-X main.version=${DISTVERSION:C/^...//}-${GH_TAGNAME:C/([0-9a-f]{7}).*/\1/}-${BUILD_OS}-${BUILD_ARCH}-DEBUG-build-${BUILD_DATE}" \
 	-o ${WRKSRC}/photoprism ./plus/cmd/photoprism-plus/photoprism-plus.go ; \
 		)
