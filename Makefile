@@ -46,7 +46,7 @@ BUILD_DATE!=date -u +%y%m%d
 BUILD_ARCH!=uname -m
 
 post-extract:
-	@${LN} -sf /usr/src/plus ${WRKSRC}/plus
+	@${CP} -R /usr/src/plus ${WRKSRC}/plus
 	@${REINPLACE_CMD} -e 's|sha1sum|shasum|g' ${WRKSRC}/scripts/download-facenet.sh
 	@${REINPLACE_CMD} -e 's|sha1sum|shasum|g' ${WRKSRC}/scripts/download-nasnet.sh
 	@${REINPLACE_CMD} -e 's|sha1sum|shasum|g' ${WRKSRC}/scripts/download-nsfw.sh
@@ -68,7 +68,7 @@ pre-build:
 
 do-build:
 	@( cd ${WRKSRC}/frontend; \
-		env NODE_ENV=production npm run build ; \
+		env NODE_ENV=production CUSTOM_SRC="../plus/frontend" CUSTOM_NAME="PhotoPrism+" npm run build ; \
 		)
 	@( cd ${WRKSRC} ; \
 		${SETENV} ${MAKE_ENV} ${GO_ENV}CGO_ENABLED=1 CGO_CFLAGS=-I/usr/local/include CGO_LDFLAGS=-L/usr/local/lib GOAMD64= GOARM= GOPATH=/usr/ports/distfiles/go/www_photoprism-freebsd-port GOBIN=/usr/src/photoprism-freebsd-port/work/bin GO111MODULE=on GOFLAGS=-modcacherw GOSUMDB=sum.golang.org GO_NO_VENDOR_CHECKS=1 ${GO_CMD} build -v -ldflags \
