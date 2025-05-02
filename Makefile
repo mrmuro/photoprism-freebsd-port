@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	photoprism
-DISTVERSION=	g20250228
+DISTVERSION=	g20250426
 CATEGORIES=	www
 
 MAINTAINER=	huoju@devep.net
@@ -34,7 +34,7 @@ PLIST_SUB+=	PYTHON_SUFFIX=${PYTHON_SUFFIX}
 USE_GITHUB=	yes
 GH_ACCOUNT=	photoprism
 GH_PROJECT=	photoprism
-GH_TAGNAME=     43447fa3810a1fb3aa3f1181a025e8d0c4cae392
+GH_TAGNAME=     27ec7a12824e2b7b3940eda22d4f5769f5bac8ba
 
 USE_RC_SUBR=    photoprism
 PHOTOPRISM_DATA_DIR=      /var/db/photoprism
